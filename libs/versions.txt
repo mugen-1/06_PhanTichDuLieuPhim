@@ -1,0 +1,12 @@
+# Bộ phiên bản chuẩn của nhóm – mọi người cài đúng các phiên bản này
+Ubuntu        24.04 LTS
+Java          17
+Hadoop        3.4.2
+Hive          4.1.0
+HBase         2.6.6
+Pig           0.18.0
+Sqoop         1.4.7
+Spark         3.5.9 (bin-hadoop3)
+MySQL         8.0
+MongoDB       8.0
+Python        3.12
