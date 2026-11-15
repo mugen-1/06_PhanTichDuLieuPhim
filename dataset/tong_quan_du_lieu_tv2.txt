@@ -1,0 +1,234 @@
+===== TONG QUAN DU LIEU PHAN THANH VIEN 2 - cap nhat 2026-11-15 23:10 =====
+
+########## 1. MYSQL - CSDL moviedb ##########
++--------------+---------+
+| bang         | so_dong |
++--------------+---------+
+| movies       |    1500 |
+| genres       |      18 |
+| movie_genres |    4155 |
+| people       |    3925 |
+| movie_people |    9152 |
+| reviews      |    7872 |
++--------------+---------+
+
+=== Bang movies: cau truc ===
++-----------------+--------------+------+-----+---------+-------+
+| Field           | Type         | Null | Key | Default | Extra |
++-----------------+--------------+------+-----+---------+-------+
+| movie_id        | int          | NO   | PRI | NULL    |       |
+| imdb_id         | varchar(12)  | NO   | UNI | NULL    |       |
+| title           | varchar(300) | NO   |     | NULL    |       |
+| title_vi        | varchar(300) | YES  |     | NULL    |       |
+| year            | smallint     | YES  |     | NULL    |       |
+| release_date    | date         | YES  |     | NULL    |       |
+| runtime         | smallint     | YES  |     | NULL    |       |
+| budget          | bigint       | YES  |     | NULL    |       |
+| revenue         | bigint       | YES  |     | NULL    |       |
+| box_office_us   | bigint       | YES  |     | NULL    |       |
+| language        | varchar(10)  | YES  |     | NULL    |       |
+| country         | varchar(60)  | YES  |     | NULL    |       |
+| rated           | varchar(15)  | YES  |     | NULL    |       |
+| tmdb_vote_avg   | decimal(4,2) | YES  |     | NULL    |       |
+| tmdb_vote_count | int          | YES  |     | NULL    |       |
+| imdb_rating     | decimal(3,1) | YES  |     | NULL    |       |
+| imdb_votes      | int          | YES  |     | NULL    |       |
+| metascore       | tinyint      | YES  |     | NULL    |       |
+| rotten_tomatoes | tinyint      | YES  |     | NULL    |       |
++-----------------+--------------+------+-----+---------+-------+
+=== Bang movies: 3 dong mau ===
+*************************** 1. row ***************************
+       movie_id: 155
+        imdb_id: tt0468569
+          title: The Dark Knight
+       title_vi: Kỵ sĩ bóng đêm
+           year: 2008
+   release_date: 2008-07-16
+        runtime: 152
+         budget: 185000000
+        revenue: 1008480529
+  box_office_us: 534987076
+       language: en
+        country: United States
+          rated: PG-13
+  tmdb_vote_avg: 8.54
+tmdb_vote_count: 37382
+    imdb_rating: 9.1
+     imdb_votes: 3236507
+      metascore: 85
+rotten_tomatoes: 94
+*************************** 2. row ***************************
+       movie_id: 278
+        imdb_id: tt0111161
+          title: The Shawshank Redemption
+       title_vi: The Shawshank Redemption
+           year: 1994
+   release_date: 1994-09-23
+        runtime: 142
+         budget: 25000000
+        revenue: 28341469
+  box_office_us: 28767189
+       language: en
+        country: United States
+          rated: R
+  tmdb_vote_avg: 8.74
+tmdb_vote_count: 31844
+    imdb_rating: 9.3
+     imdb_votes: 3235958
+      metascore: 82
+rotten_tomatoes: 89
+
+=== Bang genres: cau truc ===
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| genre_id   | int         | NO   | PRI | NULL    |       |
+| genre_name | varchar(50) | NO   | UNI | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+=== Bang genres: 3 dong mau ===
++----------+------------+
+| genre_id | genre_name |
++----------+------------+
+|        1 | Action     |
+|        2 | Adventure  |
+|        3 | Animation  |
++----------+------------+
+
+=== Bang movie_genres: cau truc ===
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| movie_id | int  | NO   | PRI | NULL    |       |
+| genre_id | int  | NO   | PRI | NULL    |       |
++----------+------+------+-----+---------+-------+
+=== Bang movie_genres: 3 dong mau ===
++----------+----------+
+| movie_id | genre_id |
++----------+----------+
+|       11 |        1 |
+|       18 |        1 |
+|       22 |        1 |
++----------+----------+
+
+=== Bang people: cau truc ===
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| person_id | int          | NO   | PRI | NULL    |       |
+| name      | varchar(200) | NO   |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+=== Bang people: 3 dong mau ===
++-----------+---------------+
+| person_id | name          |
++-----------+---------------+
+|         1 | George Lucas  |
+|         2 | Mark Hamill   |
+|         3 | Harrison Ford |
++-----------+---------------+
+
+=== Bang movie_people: cau truc ===
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| movie_id   | int         | NO   | PRI | NULL    |       |
+| person_id  | int         | NO   | PRI | NULL    |       |
+| role       | varchar(10) | NO   | PRI | NULL    |       |
+| cast_order | smallint    | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+=== Bang movie_people: 3 dong mau ===
++----------+-----------+----------+------------+
+| movie_id | person_id | role     | cast_order |
++----------+-----------+----------+------------+
+|       11 |         1 | director |       NULL |
+|       11 |         2 | cast     |          0 |
+|       11 |         3 | cast     |          1 |
++----------+-----------+----------+------------+
+
+=== Bang reviews: cau truc ===
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| review_id  | int          | NO   | PRI | NULL    |       |
+| movie_id   | int          | NO   | MUL | NULL    |       |
+| author     | varchar(200) | YES  |     | NULL    |       |
+| rating     | decimal(3,1) | YES  |     | NULL    |       |
+| created_at | datetime     | YES  |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+=== Bang reviews: 3 dong mau ===
++-----------+----------+--------------+--------+---------------------+
+| review_id | movie_id | author       | rating | created_at          |
++-----------+----------+--------------+--------+---------------------+
+|         1 |   157336 | Reno         |    9.0 | 2014-11-12 16:06:04 |
+|         2 |   157336 | decovision   |    9.5 | 2015-09-12 14:49:33 |
+|         3 |   157336 | Andres Gomez |    7.0 | 2015-10-31 12:07:03 |
++-----------+----------+--------------+--------+---------------------+
+
+########## 2. MONGODB - CSDL moviedb ##########
+
+=== Collection movie_texts: 1500 document. 1 document mau:
+{
+  movie_id: 24428,
+  imdb_id: 'tt0848228',
+  title: 'The Avengers',
+  title_vi: 'Biệt đội siêu anh hùng',
+  overview_tmdb: 'When an unexpected enemy emerges and threatens global safety and security, Nick Fury, director of the international peacekeeping agency known as S.H.I.E.L.D., finds himself in need of a team to pull the world back from the brink of disaster. Spanning the globe, a daring recruitment effort begins!',
+  wiki_ngon_ngu: 'vi',
+  wiki_tom_tat: 'Biệt đội siêu anh hùng là một bộ phim siêu anh hùng của Mỹ công chiếu vào năm 2012 được xây dựng dựa trên nguyên mẫu các thành viên của biệt đội siêu anh hùng Avengers của Marvel Comics, do Marvel Studios sản xuất và Walt Disney Studios Motion Pictures phân phối phát hành. Đây là bộ phim thứ 6 kết thúc Giai đoạn 1 trong Vũ trụ Điện ảnh Marvel (MCU). Bộ phim do Joss Whedon viết kịch bản kiêm đạo diễn, với sự tham gia của các diễn viên chính bao gồm Robert Downey, Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth, Scarlett Johansson, Jeremy Renner trong vai các thành viên của đội Avengers, cùng với Tom Hiddleston, Clark Gregg, Cobie Smulders, Stellan Skarsgård và Samuel L. Jackson. Trong The Avengers, Nick Fury, người điều hành của tổ chức gìn giữ hòa bình S.H.I.E.L.D., chiêu mộ Tony Stark, Bruce Banner, Thor, và Steve Rogers để để thành lập một đội có khả năng ngăn chặn em trai của Thor, Loki chinh phục Trái đất.',
+  wiki_url: 'https://vi.wikipedia.org/wiki/Bi%E1%BB%87t_%C4%91%E1%BB%99i_si%C3%AAu_anh_h%C3%B9ng',
+  awards: 'Nominated for 1 Oscar. 43 wins & 81 nominations total',
+  wiki_vi_infobox: {
+    ten_bai: 'Biệt đội siêu anh hùng',
+    dao_dien: 'Joss Whedon',
+    dien_vien: 'Robert Downey Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth, Scarlett Johansson, Jeremy Renner, Tom Hiddleston, Clark Gregg, Cobie Smulders, Stellan Skarsgård, Samuel L. Jackson',
+    phat_hanh: 'Walt Disney Studios Motion Pictures',
+    cong_chieu: '11 tháng 4 năm 2012 ( 2012-04-11 ) ( El Capitan Theatre ) 27 tháng 4 năm 2012 ( 2012-04-27 ) (Việt Nam) 4 tháng 5 năm 2012 ( 2012-05-04 ) (Hoa Kỳ)',
+    thoi_luong: '142 phút',
+    quoc_gia: 'Hoa Kỳ',
+    ngon_ngu: 'Tiếng Anh',
+    kinh_phi: '220 triệu USD',
+    doanh_thu: '1,519 tỷ USD',
+    kinh_phi_usd: 220000000,
+    doanh_thu_usd: 1519000000
+  }
+}
+
+=== Collection reviews: 7872 document. 1 document mau:
+{
+  review_id: 2,
+  movie_id: 157336,
+  author: 'decovision',
+  content: "People seem to think that if you enjoy a Christopher Nolan movie, you are a fanboy and the film couldn't really be that good. That is not true. He has never made a bad movie, Insomnia is probably his worst and it is still an excellent movie. \r\n" +
+    "Interstellar is up there in his top 3, with The Dark Knight being number 1 and Inception in number 2. I don't think he will ever make a better movie than The Dark Knight, it is without a doubt a masterpiece of cinema in my opinion. It can be enjoyed on so many levels.\r\n" +
+    'I remember seeing Interstellar in the movie theater and being on the edge of my seat the whole time. It was breathtaking but the end left me confused so i walked out disappointed. \r\n' +
+    'Since then i have watched it many times but it only took a second viewing to realize what a great ending it is and here is why. How many people discuss the end, was the wormhole open or closed for him to make it to Brand, what happens next, is there a sequel. I discuss this with people who hate the movie and the debate will still last a good 30 minutes if not more without getting heated. It is a wonderful story told through the eyes of a genius film maker who deserves more than he receives, an oscar would be nice start.\r\n' +
+    "I read hat his next movie is to be released in July 2017, I can't wait to find out everything about it like i have since he began.\r\n" +
+    "If you're unsure about Christopher Nolan, watch his career from the beginning starting with Doodlebug."
+}
+
+########## 3. HDFS - /user/nhom06/movies ##########
+26.5 K   26.5 K   /user/nhom06/movies/mr/mr1_omdb_sach
+188.4 K  188.4 K  /user/nhom06/movies/mr/mr2_tmdb_khong_trung
+49.0 K   49.0 K   /user/nhom06/movies/mr/mr3_the_loai
+1.4 M    1.4 M    /user/nhom06/movies/raw/flume
+22.9 M   22.9 M   /user/nhom06/movies/raw/tmdb
+189      189      /user/nhom06/movies/sqoop/genres
+33.1 K   33.1 K   /user/nhom06/movies/sqoop/movie_genres
+173.2 K  173.2 K  /user/nhom06/movies/sqoop/movie_people
+188.6 K  188.6 K  /user/nhom06/movies/sqoop/movies
+77.7 K   77.7 K   /user/nhom06/movies/sqoop/people
+369.4 K  369.4 K  /user/nhom06/movies/sqoop/reviews
+-rw-r--r--   1 nhom06 supergroup      13601 2026-11-15 22:37 /user/nhom06/movies/mr/mr1_omdb_sach/part-00000
+-rw-r--r--   1 nhom06 supergroup      13520 2026-11-15 22:37 /user/nhom06/movies/mr/mr1_omdb_sach/part-00001
+-rw-r--r--   1 nhom06 supergroup     192910 2026-11-15 22:38 /user/nhom06/movies/mr/mr2_tmdb_khong_trung/part-00000
+-rw-r--r--   1 nhom06 supergroup      50156 2026-11-15 22:39 /user/nhom06/movies/mr/mr3_the_loai/part-00000
+-rw-r--r--   1 nhom06 supergroup    1088613 2026-11-15 22:34 /user/nhom06/movies/raw/flume/2026-11-15/omdb_movies.jsonl.1794756822060
+-rw-r--r--   1 nhom06 supergroup     375019 2026-11-15 22:34 /user/nhom06/movies/raw/flume/2026-11-15/wiki_movies.jsonl.1794756822803
+-rw-r--r--   1 nhom06 supergroup       8717 2026-11-15 22:36 /user/nhom06/movies/raw/tmdb/danh_sach_tmdb.txt
+-rw-r--r--   1 nhom06 supergroup   24033355 2026-11-15 22:36 /user/nhom06/movies/raw/tmdb/tmdb_movies.jsonl
+-rw-r--r--   1 nhom06 supergroup        189 2026-11-15 22:27 /user/nhom06/movies/sqoop/genres/part-m-00000
+-rw-r--r--   1 nhom06 supergroup      33905 2026-11-15 22:28 /user/nhom06/movies/sqoop/movie_genres/part-m-00000
+-rw-r--r--   1 nhom06 supergroup     170477 2026-11-15 22:28 /user/nhom06/movies/sqoop/movie_people/part-m-00000
+-rw-r--r--   1 nhom06 supergroup       6928 2026-11-15 22:28 /user/nhom06/movies/sqoop/movie_people/part-m-00001
+-rw-r--r--   1 nhom06 supergroup     193164 2026-11-15 22:27 /user/nhom06/movies/sqoop/movies/part-m-00000
+-rw-r--r--   1 nhom06 supergroup      79591 2026-11-15 22:28 /user/nhom06/movies/sqoop/people/part-m-00000
+-rw-r--r--   1 nhom06 supergroup     378262 2026-11-15 22:28 /user/nhom06/movies/sqoop/reviews/part-m-00000
