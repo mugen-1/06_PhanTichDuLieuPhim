@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Nguon 3 - Wikipedia (uu tien tieng Viet), khong can key.
 # Buoc 1: hoi Wikidata (SPARQL) xem moi imdb_id ung voi bai Wikipedia nao (vi / en),
-#         moi lan hoi 100 phim.
+#         moi lan hoi 50 phim, loi thi cho roi thu lai.
 # Buoc 2: voi tung phim, lay ten va doan tom tat cua bai viet (REST API cua Wikipedia).
 #         Co bai tieng Viet thi lay tieng Viet, khong co thi lay tieng Anh.
 
@@ -40,31 +40,43 @@ def doc_imdb_id():
     return list(dict.fromkeys(tmdb2imdb[t] for t in ds if tmdb2imdb.get(t)))
 
 
-def hoi_wikidata(ids):
+def hoi_wikidata(nhom):
+    # Hoi Wikidata cho 1 nhom phim. May chu Wikidata hay qua tai (loi 502, 503, 429, het thoi gian)
+    # -> cho roi thu lai, toi da 5 lan, moi lan cho lau hon (5, 10, 20, 40, 80 giay).
+    q = CAU_HOI % " ".join(f'"{x}"' for x in nhom)
+    for lan in range(5):
+        try:
+            r = requests.get(SPARQL, params={"query": q, "format": "json"}, headers=HEADERS, timeout=60)
+            if r.status_code == 200:
+                break
+            ly_do = r.status_code
+        except requests.RequestException as e:
+            ly_do = type(e).__name__
+        cho = 5 * 2 ** lan
+        print(f"    Wikidata loi {ly_do}, cho {cho} giay roi thu lai ({lan + 1}/5)")
+        time.sleep(cho)
+    else:
+        return None                              # 5 lan deu loi -> bo qua nhom nay, lan sau chay lai
     ket_qua = {}
-    for i in range(0, len(ids), 100):
-        nhom = ids[i:i + 100]
-        q = CAU_HOI % " ".join(f'"{x}"' for x in nhom)
-        r = requests.get(SPARQL, params={"query": q, "format": "json"}, headers=HEADERS, timeout=60)
-        r.raise_for_status()
-        for b in r.json()["results"]["bindings"]:
-            imdb = b["imdb"]["value"]
-            if imdb in ket_qua:                  # 1 phim co the tra ve nhieu dong -> lay dong dau
-                continue
-            ket_qua[imdb] = {
-                "wikidata_id": b["item"]["value"].rsplit("/", 1)[-1],
-                "ten_vi": b.get("tenVi", {}).get("value"),
-                "bai_vi": b.get("baiVi", {}).get("value"),
-                "bai_en": b.get("baiEn", {}).get("value"),
-            }
-        print(f"  Wikidata: {min(i + 100, len(ids))}/{len(ids)} phim")
-        time.sleep(1)
+    for b in r.json()["results"]["bindings"]:
+        imdb = b["imdb"]["value"]
+        if imdb in ket_qua:                      # 1 phim co the tra ve nhieu dong -> lay dong dau
+            continue
+        ket_qua[imdb] = {
+            "wikidata_id": b["item"]["value"].rsplit("/", 1)[-1],
+            "ten_vi": b.get("tenVi", {}).get("value"),
+            "bai_vi": b.get("baiVi", {}).get("value"),
+            "bai_en": b.get("baiEn", {}).get("value"),
+        }
     return ket_qua
 
 
 def lay_tom_tat(lang, bai):
     url = f"https://{lang}.wikipedia.org/api/rest_v1/page/summary/{quote(bai.replace(' ', '_'), safe='')}"
-    r = requests.get(url, headers=HEADERS, timeout=15)
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=15)
+    except requests.RequestException:
+        return None
     if r.status_code != 200:
         return None
     d = r.json()
@@ -85,34 +97,40 @@ def main():
     if not can_lay:
         return
 
-    wd = hoi_wikidata(can_lay)
-    print(f"Wikidata tim thay {len(wd)}/{len(can_lay)} phim")
-
-    co_vi = co_en = khong_co = 0
+    # Lam tung nhom 50 phim: hoi Wikidata -> lay tom tat -> ghi file ngay.
+    # Bi loi giua chung thi phim da ghi van con, chay lai se lam tiep phan con thieu.
+    co_vi = co_en = khong_co = bo_qua = 0
     with open(OUT, "a", encoding="utf-8") as out:
-        for n, imdb_id in enumerate(can_lay, 1):
-            w = wd.get(imdb_id, {})
-            ban = None
-            if w.get("bai_vi"):
-                ban = lay_tom_tat("vi", w["bai_vi"])
-                ngon_ngu = "vi"
-            if ban is None and w.get("bai_en"):
-                ban = lay_tom_tat("en", w["bai_en"])
-                ngon_ngu = "en"
-            if ban is None:
-                ngon_ngu = None
-                khong_co += 1
-            elif ngon_ngu == "vi":
-                co_vi += 1
-            else:
-                co_en += 1
-            out.write(json.dumps({"imdb_id": imdb_id, "wikidata_id": w.get("wikidata_id"),
-                                  "ten_vi": w.get("ten_vi"), "ngon_ngu": ngon_ngu,
-                                  **(ban or {})}, ensure_ascii=False) + "\n")
-            if n % 100 == 0:
-                print(f"  {n}/{len(can_lay)}  tieng Viet={co_vi}  tieng Anh={co_en}  khong co={khong_co}")
-                out.flush()
-            time.sleep(0.1)
+        for i in range(0, len(can_lay), 50):
+            nhom = can_lay[i:i + 50]
+            wd = hoi_wikidata(nhom)
+            if wd is None:
+                bo_qua += len(nhom)
+                print(f"  Bo qua {len(nhom)} phim vi Wikidata loi lien tuc (chay lai sau)")
+                continue
+            for imdb_id in nhom:
+                w = wd.get(imdb_id, {})
+                ban, ngon_ngu = None, None
+                if w.get("bai_vi"):
+                    ban, ngon_ngu = lay_tom_tat("vi", w["bai_vi"]), "vi"
+                if ban is None and w.get("bai_en"):
+                    ban, ngon_ngu = lay_tom_tat("en", w["bai_en"]), "en"
+                if ban is None:
+                    ngon_ngu = None
+                    khong_co += 1
+                elif ngon_ngu == "vi":
+                    co_vi += 1
+                else:
+                    co_en += 1
+                out.write(json.dumps({"imdb_id": imdb_id, "wikidata_id": w.get("wikidata_id"),
+                                      "ten_vi": w.get("ten_vi"), "ngon_ngu": ngon_ngu,
+                                      **(ban or {})}, ensure_ascii=False) + "\n")
+                time.sleep(0.1)
+            out.flush()
+            print(f"  {min(i + 50, len(can_lay))}/{len(can_lay)}  tieng Viet={co_vi}  tieng Anh={co_en}  khong co={khong_co}")
+            time.sleep(1)
+    if bo_qua:
+        print(f"Con {bo_qua} phim chua lay duoc do Wikidata loi -> chay lai lenh nay de lay tiep")
     print(f"Xong. Tom tat tieng Viet: {co_vi}, tieng Anh: {co_en}, khong co bai: {khong_co}")
 
 

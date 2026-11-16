@@ -234,7 +234,8 @@ def main():
     ghi_tsv(rv[["review_id", "movie_id", "author", "rating", "created_at"]], "reviews.tsv")
 
     # Van ban dai -> JSON lines cho MongoDB
-    wmap = w.set_index("imdb_id").to_dict("index")
+    # Phim khong co bai Wikipedia -> pandas de NaN; JSON khong co NaN nen doi ve None (null)
+    wmap = w.set_index("imdb_id").astype(object).where(w.set_index("imdb_id").notna(), None).to_dict("index")
     scr = doc_scrapy()
     khop = lech = 0
     for _, r in df.iterrows():
