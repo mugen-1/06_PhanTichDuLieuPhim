@@ -5,12 +5,12 @@
 [tmdb] runtime = 0 -> NULL: 0
 [tmdb] budget = 0 -> NULL: 17
 [tmdb] revenue = 0 -> NULL: 31
-[omdb] Doc 1000 ban ghi, sau bo trung: 1000
-[omdb] So o ghi 'N/A' (-> NULL): {'imdbRating': 0, 'Metascore': 4, 'BoxOffice': 24, 'Awards': 3}
-[omdb] Co diem Rotten Tomatoes: 986, co Metascore: 996, co BoxOffice: 976
-[wiki] Doc 371 phim: tieng Viet 355, tieng Anh 16, khong co bai 0
-[ghep] Tong 1500 phim | co OMDb: 1000 | co ten tieng Viet: 355
-[ghep] Thoi luong TMDB va OMDb lech > 10 phut: 5 phim (giu so cua TMDB)
+[omdb] Doc 1496 ban ghi, sau bo trung: 1496
+[omdb] So o ghi 'N/A' (-> NULL): {'imdbRating': 0, 'Metascore': 17, 'BoxOffice': 62, 'Awards': 11}
+[omdb] Co diem Rotten Tomatoes: 1460, co Metascore: 1479, co BoxOffice: 1434
+[wiki] Doc 1500 phim: tieng Viet 1108, tieng Anh 385, khong co bai 7
+[ghep] Tong 1500 phim | co OMDb: 1496 | co ten tieng Viet: 1132
+[ghep] Thoi luong TMDB va OMDb lech > 10 phut: 10 phim (giu so cua TMDB)
 [the loai] 18 the loai, 4155 cap phim-the loai, bu tu OMDb: 0 phim
 [review] 7873 -> 7872 (bo trung 1), co diem: 6909
 [ghi file] dataset/clean/
@@ -21,5 +21,5 @@
   -> movie_people.tsv: 9152 dong
   -> reviews.tsv: 7872 dong
 [scrapy] 200 bai phim tieng Viet, doi duoc kinh phi ra so: 129, doanh thu: 109
-[scrapy] Noi duoc voi 111/193 bai (qua ma Wikidata); doanh thu Wikipedia lech TMDB > 5%: 15 phim
+[scrapy] Noi duoc voi 147/193 bai (qua ma Wikidata); doanh thu Wikipedia lech TMDB > 5%: 21 phim
   -> movie_texts.jsonl: 1500 dong, reviews.jsonl: 7872 dong
