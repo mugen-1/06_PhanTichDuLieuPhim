@@ -1,0 +1,344 @@
+======================================================================
+ SỔ TAY LỆNH – PHẦN THÀNH VIÊN 2 (THU THẬP & ĐƯA DỮ LIỆU VÀO HỆ THỐNG)
+ Đồ án nhóm 06 – BDES333877 – Nguyễn Trung Hiếu (24TX810059)
+ Máy ảo chung: user nhom06, hostname nhom06-master, IP 192.168.47.136
+ Repo: ~/06_PhanTichDuLieuPhim  (github.com/mugen-1/06_PhanTichDuLieuPhim)
+ Cập nhật: 16/11/2026 – đã sửa theo các lỗi gặp khi chạy thật
+======================================================================
+
+QUY ƯỚC
+- Mọi lệnh chạy trong Terminal của MÁY ẢO, trừ khi ghi "(Windows)".
+- Mở Terminal mới thì luôn gõ trước:  cd ~/06_PhanTichDuLieuPhim
+- Dán lệnh vào Terminal Ubuntu: Ctrl + Shift + V. Tắt EVKey trước khi gõ key/mật khẩu.
+- Thấy dấu nhắc ">" đứng chờ = lệnh thiếu dấu đóng (' hoặc " hoặc EOF): bấm Ctrl + C rồi dán lại cho đủ.
+- (1 lần) = chỉ chạy lần đầu, đã chạy rồi thì bỏ qua.
+
+
+======================================================================
+ A. ĐỊA CHỈ GIAO DIỆN WEB
+======================================================================
+ Xem gì                          | Trong máy ảo (Firefox)          | Từ Windows
+---------------------------------+---------------------------------+------------------------------------
+ HDFS – duyệt file (9870)        | http://nhom06-master:9870       | http://192.168.47.136:9870
+ YARN – danh sách job (9004)     | http://nhom06-master:9004       | http://192.168.47.136:9004
+ JobHistory – counter (19888)    | http://nhom06-master:19888      | http://192.168.47.136:19888
+ MySQL – phpMyAdmin              | http://localhost/phpmyadmin     | http://192.168.47.136/phpmyadmin
+ MongoDB – Compass (ứng dụng)    | mongodb://localhost:27017       | (cần mở cổng, chưa làm)
+
+ Ghi chú:
+ - YARN của nhóm dùng cổng 9004 (không phải 8088) – cấu hình yarn.resourcemanager.webapp.address trong yarn-site.xml.
+ - HDFS: Utilities -> Browse the file system -> /user/nhom06/movies -> bấm file -> Head the file.
+ - Counter MapReduce: 19888 -> Jobs -> chọn job TV2 ... -> Counters.
+ - Muốn nút Download của HDFS chạy trên Windows: thêm dòng
+       192.168.47.136 nhom06-master
+   vào C:\Windows\System32\drivers\etc\hosts (mở Notepad bằng quyền Administrator).
+
+
+======================================================================
+ B. MỖI LẦN BẬT MÁY
+======================================================================
+cd ~/06_PhanTichDuLieuPhim
+start-dfs.sh
+start-yarn.sh
+mapred --daemon start historyserver
+jps
+# Phải có: NameNode, DataNode, SecondaryNameNode, ResourceManager, NodeManager, JobHistoryServer
+
+# Đặt API key (gõ thấy chữ để kiểm tra, xong thì clear)
+export TMDB_API_KEY=DAN_KEY_TMDB_32_KY_TU
+export OMDB_API_KEY=DAN_KEY_OMDB_8_KY_TU
+echo ${#TMDB_API_KEY} ${#OMDB_API_KEY}
+# Phải ra: 32 8
+clear
+
+
+======================================================================
+ C. THU THẬP DỮ LIỆU (4 NGUỒN)
+======================================================================
+# C1. TMDB – 1.500 phim nhiều vote nhất (chạy lại được, phim đã có thì bỏ qua)
+time python3 source-code/crawler/thu_thap/crawl_tmdb.py --so-phim 1500
+wc -l dataset/raw/tmdb/danh_sach_tmdb.txt dataset/raw/tmdb/tmdb_movies.jsonl
+
+# C2. OMDb – điểm IMDb, Rotten Tomatoes, Metacritic (giới hạn ~1.000 lượt/ngày, hết lượt tự dừng)
+time python3 source-code/crawler/thu_thap/crawl_omdb.py
+wc -l dataset/raw/omdb/omdb_movies.jsonl
+
+# C3. Wikipedia – tên + tóm tắt tiếng Việt (bản mới: tự thử lại khi Wikidata lỗi 502, ghi theo nhóm 50 phim)
+time python3 source-code/crawler/thu_thap/crawl_wikipedia.py
+wc -l dataset/raw/wikipedia/wiki_movies.jsonl
+# Nếu báo "Con ... phim chua lay duoc" thì chạy lại đúng lệnh trên.
+
+# C4. Scrapy – cào infobox Wikipedia tiếng Việt
+#   (1 lần) sudo apt install -y python3-scrapy
+scrapy runspider source-code/crawler/scrapy_wiki/phim_wiki_spider.py -O dataset/raw/wikipedia/vi_phim_scrapy.jsonl 2>&1 | grep -E "Trang danh sach|item_scraped_count|ERROR"
+wc -l dataset/raw/wikipedia/vi_phim_scrapy.jsonl
+# Chạy thử ít phim: thêm  -a toi_da=20
+
+
+======================================================================
+ D. LÀM SẠCH VÀ GHÉP NGUỒN
+======================================================================
+python3 source-code/crawler/lam_sach/lam_sach.py
+cat dataset/clean/bao_cao_lam_sach.txt
+wc -l dataset/clean/*
+grep -c NaN dataset/clean/movie_texts.jsonl
+# Dòng cuối phải ra 0 (bản lam_sach.py đã sửa NaN -> null)
+
+
+======================================================================
+ E. MYSQL
+======================================================================
+# (1 lần) Bật local_infile VĨNH VIỄN (SET GLOBAL chỉ tạm thời, khởi động lại là mất)
+sudo mysql -e "SET PERSIST local_infile = 1; SHOW GLOBAL VARIABLES LIKE 'local_infile';"
+
+# (1 lần) Tạo user tv2 – gõ trong  sudo mysql
+#   CREATE USER IF NOT EXISTS 'tv2'@'localhost' IDENTIFIED BY '<mat-khau-tu-dat>';
+#   CREATE DATABASE IF NOT EXISTS moviedb_restore CHARACTER SET utf8mb4;
+#   GRANT ALL PRIVILEGES ON moviedb.* TO 'tv2'@'localhost';
+#   GRANT ALL PRIVILEGES ON moviedb_restore.* TO 'tv2'@'localhost';
+#   FLUSH PRIVILEGES;
+
+# Tạo lại 6 bảng (xóa dữ liệu cũ) rồi nạp dữ liệu sạch
+sudo mysql < source-code/crawler/mysql/schema_mysql.sql
+mysql --local-infile=1 -u tv2 -p moviedb < source-code/crawler/mysql/nap_mysql.sql
+
+# Kiểm tra
+mysql -u tv2 -p moviedb -e "
+SELECT 'movies' bang, COUNT(*) so_dong FROM movies
+UNION ALL SELECT 'genres', COUNT(*) FROM genres
+UNION ALL SELECT 'movie_genres', COUNT(*) FROM movie_genres
+UNION ALL SELECT 'people', COUNT(*) FROM people
+UNION ALL SELECT 'movie_people', COUNT(*) FROM movie_people
+UNION ALL SELECT 'reviews', COUNT(*) FROM reviews;
+SELECT title, title_vi, year, imdb_rating, metascore, rotten_tomatoes FROM movies
+WHERE title_vi IS NOT NULL ORDER BY imdb_votes DESC LIMIT 5;"
+
+# (1 lần) phpMyAdmin để xem trên web: chọn apache2 (phím cách) -> Enter -> dbconfig: Yes
+#   sudo apt install -y phpmyadmin
+
+
+======================================================================
+ F. MONGODB
+======================================================================
+mongoimport --db moviedb --collection movie_texts --drop --file dataset/clean/movie_texts.jsonl
+mongoimport --db moviedb --collection reviews   --drop --file dataset/clean/reviews.jsonl
+
+# Truy vấn – nhớ copy cả dấu ' ở dòng cuối cùng
+mongosh moviedb --quiet --eval '
+print("movie_texts:", db.movie_texts.countDocuments(), " reviews:", db.reviews.countDocuments());
+print("Co tom tat tieng Viet:", db.movie_texts.countDocuments({wiki_ngon_ngu: "vi"}));
+db.movie_texts.find({wiki_ngon_ngu: "vi"}, {title_vi:1, wiki_tom_tat:1, _id:0}).limit(2).forEach(printjson);
+db.movie_texts.createIndex({overview_tmdb: "text", wiki_tom_tat: "text"});
+db.movie_texts.find({$text: {$search: "space war"}}, {title:1, _id:0}).limit(5).forEach(printjson);
+db.movie_texts.find({awards: /Oscar/}, {title:1, awards:1, _id:0}).limit(3).forEach(printjson);
+'
+
+
+======================================================================
+ G. SQOOP: MYSQL -> HDFS
+======================================================================
+# (1 lần) File mật khẩu + biến kết nối A lưu trong .bashrc
+read -s -p "Mat khau MySQL cua tv2: " P; echo
+echo -n "$P" > ~/.tv2.pwd; chmod 400 ~/.tv2.pwd; unset P
+echo 'export A="--connect jdbc:mysql://localhost:3306/moviedb?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true --username tv2 --password-file file://$HOME/.tv2.pwd"' >> ~/.bashrc
+grep -q "file.encoding=UTF-8" ~/.bashrc || echo 'export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"' >> ~/.bashrc
+source ~/.bashrc
+
+# Kiểm tra kết nối (dòng Warning HCatalog/Accumulo/Zookeeper là bình thường, đã lọc)
+sqoop list-tables $A 2>/dev/null | grep -v -E "^Warning|^Please set"
+sqoop eval $A --query "SELECT COUNT(*) FROM movies" 2>/dev/null | grep -v -E "^Warning|^Please set"
+
+# Import 6 bảng (movie_people chạy 2 mapper)
+hdfs dfs -mkdir -p /user/nhom06/movies/sqoop
+for t in movies genres movie_genres people reviews; do
+  sqoop import $A --table $t --target-dir /user/nhom06/movies/sqoop/$t --delete-target-dir \
+    --fields-terminated-by '\t' --null-string '\\N' --null-non-string '\\N' -m 1 2>&1 | grep -E "Retrieved|ERROR"
+done
+sqoop import $A --table movie_people --target-dir /user/nhom06/movies/sqoop/movie_people --delete-target-dir \
+  --fields-terminated-by '\t' --null-string '\\N' --null-non-string '\\N' --split-by movie_id -m 2 2>&1 | grep -E "Retrieved|ERROR"
+
+# Kiểm tra
+hdfs dfs -ls -R /user/nhom06/movies/sqoop | grep part-m
+for t in movies movie_people; do echo -n "$t: "; hdfs dfs -cat /user/nhom06/movies/sqoop/$t/part-m-* | wc -l; done
+
+
+======================================================================
+ H. FLUME: FILE THÔ -> HDFS
+======================================================================
+# (1 lần) Cài Flume 1.11.0
+cd ~
+wget https://archive.apache.org/dist/flume/1.11.0/apache-flume-1.11.0-bin.tar.gz
+tar xzf apache-flume-1.11.0-bin.tar.gz && mv apache-flume-1.11.0-bin flume && rm apache-flume-1.11.0-bin.tar.gz
+echo 'export FLUME_HOME=$HOME/flume' >> ~/.bashrc
+echo 'export PATH=$PATH:$FLUME_HOME/bin' >> ~/.bashrc
+source ~/.bashrc
+cd ~/06_PhanTichDuLieuPhim
+
+# (1 lần) Tăng bộ nhớ (mặc định 20 MB -> OutOfMemoryError) + chép file cấu hình
+echo 'export JAVA_OPTS="-Xms128m -Xmx512m"' > $FLUME_HOME/conf/flume-env.sh
+cp source-code/crawler/flume/tv2-spool.conf ~/flume_tv2.conf
+mkdir -p ~/flume_spool
+
+# Dọn lần chạy trước (Flume báo lỗi nếu gặp lại file trùng tên đã xử lý)
+rm -f ~/flume_spool/*
+hdfs dfs -rm -r -f /user/nhom06/movies/raw/flume
+
+# TERMINAL 1 – chạy agent (HIVE_HOME= để không nạp thư viện Hive)
+HIVE_HOME= flume-ng agent --conf $FLUME_HOME/conf --conf-file ~/flume_tv2.conf --name tv2 -Dflume.root.logger=INFO,console
+
+# TERMINAL 2 – thả file, chờ 40 giây, kiểm tra
+cd ~/06_PhanTichDuLieuPhim
+cp dataset/raw/omdb/omdb_movies.jsonl dataset/raw/wikipedia/wiki_movies.jsonl ~/flume_spool/
+sleep 40; ls ~/flume_spool
+hdfs dfs -ls -R /user/nhom06/movies/raw/flume
+hdfs dfs -cat "/user/nhom06/movies/raw/flume/*/omdb_movies.jsonl*" | wc -l
+wc -l dataset/raw/omdb/omdb_movies.jsonl
+# Đúng: 2 file *.COMPLETED, 2 số đếm dòng bằng nhau. Xong thì Ctrl + C ở Terminal 1.
+
+# Đưa file TMDB lên HDFS (không qua Flume vì mỗi dòng rất dài)
+hdfs dfs -mkdir -p /user/nhom06/movies/raw/tmdb
+hdfs dfs -put -f dataset/raw/tmdb/tmdb_movies.jsonl dataset/raw/tmdb/danh_sach_tmdb.txt /user/nhom06/movies/raw/tmdb/
+hdfs dfs -ls /user/nhom06/movies/raw/tmdb
+
+
+======================================================================
+ I. MAPREDUCE (PYTHON STREAMING) – chạy cùng 1 Terminal
+======================================================================
+cd ~/06_PhanTichDuLieuPhim
+M=source-code/mapreduce
+STREAM=$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.4.2.jar
+
+# MR1 – lọc lỗi dữ liệu OMDb (chỉ có Map)
+hdfs dfs -rm -r -f /user/nhom06/movies/mr/mr1_omdb_sach
+hadoop jar $STREAM -D mapreduce.job.name="TV2 MR1 loc loi OMDb" -D mapreduce.job.reduces=0 \
+  -files $M/tv2_mr1_loc_loi_omdb/mapper.py -mapper "python3 mapper.py" \
+  -input "/user/nhom06/movies/raw/flume/*/omdb_movies.jsonl*" -output /user/nhom06/movies/mr/mr1_omdb_sach
+hdfs dfs -cat /user/nhom06/movies/mr/mr1_omdb_sach/part-* | head -5
+
+# MR2 – loại phim trùng theo imdb_id
+hdfs dfs -rm -r -f /user/nhom06/movies/mr/mr2_tmdb_khong_trung
+hadoop jar $STREAM -D mapreduce.job.name="TV2 MR2 loai trung imdb_id" \
+  -files $M/tv2_mr2_loai_trung/mapper.py,$M/tv2_mr2_loai_trung/reducer.py \
+  -mapper "python3 mapper.py" -reducer "python3 reducer.py" \
+  -input /user/nhom06/movies/raw/tmdb/tmdb_movies.jsonl -output /user/nhom06/movies/mr/mr2_tmdb_khong_trung
+hdfs dfs -cat /user/nhom06/movies/mr/mr2_tmdb_khong_trung/part-* | wc -l
+
+# MR3 – chuẩn hóa thể loại
+hdfs dfs -rm -r -f /user/nhom06/movies/mr/mr3_the_loai
+hadoop jar $STREAM -D mapreduce.job.name="TV2 MR3 chuan hoa the loai" \
+  -files $M/tv2_mr3_the_loai/mapper.py,$M/tv2_mr3_the_loai/reducer.py \
+  -mapper "python3 mapper.py" -reducer "python3 reducer.py" \
+  -input "/user/nhom06/movies/raw/flume/*/omdb_movies.jsonl*" -output /user/nhom06/movies/mr/mr3_the_loai
+hdfs dfs -cat /user/nhom06/movies/mr/mr3_the_loai/part-* | cut -f2 | sort | uniq -c | sort -rn
+
+# So sánh thể loại OMDb (MR3) với TMDB
+hdfs dfs -cat /user/nhom06/movies/mr/mr3_the_loai/part-* | cut -f2 | sort -u > /tmp/tl_omdb.txt
+tail -n +2 dataset/clean/genres.tsv | cut -f2 | sort -u > /tmp/tl_tmdb.txt
+echo "Chi OMDb co:"; comm -23 /tmp/tl_omdb.txt /tmp/tl_tmdb.txt
+echo "Chi TMDB co:"; comm -13 /tmp/tl_omdb.txt /tmp/tl_tmdb.txt
+
+# Xem counter trên web: http://nhom06-master:19888 -> Jobs -> TV2 ... -> Counters
+
+
+======================================================================
+ J. SAO LƯU VÀ PHỤC HỒI
+======================================================================
+mkdir -p ~/backup
+mysqldump -u tv2 -p --no-tablespaces moviedb > ~/backup/moviedb_$(date +%Y%m%d).sql
+ls -lh ~/backup
+mysql -u tv2 -p moviedb_restore < ~/backup/moviedb_$(date +%Y%m%d).sql
+mysql -u tv2 -p -e "SELECT (SELECT COUNT(*) FROM moviedb.movie_people) goc, (SELECT COUNT(*) FROM moviedb_restore.movie_people) phuc_hoi;"
+
+# Thử xóa bảng rồi phục hồi
+mysql -u tv2 -p moviedb -e "DROP TABLE movie_people; SHOW TABLES;"
+mysql -u tv2 -p moviedb < ~/backup/moviedb_$(date +%Y%m%d).sql
+mysql -u tv2 -p moviedb -e "SELECT COUNT(*) FROM movie_people;"
+
+# MongoDB
+mongodump --db moviedb --out ~/backup/mongo_$(date +%Y%m%d)
+mongorestore --drop --nsFrom 'moviedb.*' --nsTo 'moviedb_restore.*' ~/backup/mongo_$(date +%Y%m%d)
+mongosh --quiet --eval '["movie_texts","reviews"].forEach(c => print(c, db.getSiblingDB("moviedb")[c].countDocuments(), db.getSiblingDB("moviedb_restore")[c].countDocuments()))'
+
+# Quên mật khẩu tv2: xem lại (không chụp màn hình, xem xong gõ clear)
+#   cat ~/.tv2.pwd; echo
+
+
+======================================================================
+ K. FILE TỔNG QUAN DỮ LIỆU CHO NHÓM
+======================================================================
+cd ~/06_PhanTichDuLieuPhim
+OUT=dataset/tong_quan_du_lieu_tv2.txt
+M="mysql -u tv2 -p$(cat ~/.tv2.pwd) moviedb -t"
+{
+echo "===== TONG QUAN DU LIEU PHAN THANH VIEN 2 - cap nhat $(date '+%F %H:%M') ====="
+echo; echo "########## 1. MYSQL - CSDL moviedb ##########"
+$M -e "SELECT 'movies' bang, COUNT(*) so_dong FROM movies UNION ALL SELECT 'genres', COUNT(*) FROM genres
+UNION ALL SELECT 'movie_genres', COUNT(*) FROM movie_genres UNION ALL SELECT 'people', COUNT(*) FROM people
+UNION ALL SELECT 'movie_people', COUNT(*) FROM movie_people UNION ALL SELECT 'reviews', COUNT(*) FROM reviews;"
+for t in movies genres movie_genres people movie_people reviews; do
+  echo; echo "=== Bang $t: cau truc ==="
+  $M -e "DESCRIBE $t;"
+  echo "=== Bang $t: dong mau ==="
+  if [ $t = movies ]; then mysql -u tv2 -p$(cat ~/.tv2.pwd) moviedb -e "SELECT * FROM movies ORDER BY imdb_votes DESC LIMIT 2\G"
+  else $M -e "SELECT * FROM $t LIMIT 3;"; fi
+done
+echo; echo "########## 2. MONGODB - CSDL moviedb ##########"
+mongosh moviedb --quiet --eval '
+db.getCollectionNames().forEach(c => { print("\n=== Collection " + c + ": " + db[c].countDocuments() + " document. 1 document mau:"); printjson(db[c].findOne({}, {_id:0})); });'
+echo; echo "########## 3. HDFS - /user/nhom06/movies ##########"
+hdfs dfs -du -h /user/nhom06/movies/* 2>/dev/null
+hdfs dfs -ls -R /user/nhom06/movies 2>/dev/null | grep -v -E "_SUCCESS|^d"
+} > $OUT 2>/dev/null
+wc -l $OUT
+
+
+======================================================================
+ L. GIT – COMMIT NHỎ, LỜI NHẮN TỰ VIẾT
+======================================================================
+cd ~/06_PhanTichDuLieuPhim
+git pull
+git status
+# Mỗi việc 1 commit, ví dụ:
+git add source-code/crawler/thu_thap/crawl_wikipedia.py
+git commit -m "Sua crawl_wikipedia: thu lai khi Wikidata loi 502, ghi theo nhom 50 phim"
+git add source-code/crawler/lam_sach/lam_sach.py
+git commit -m "Sua lam_sach: doi NaN thanh null de mongoimport doc duoc"
+for f in dataset/clean/*.tsv; do head -301 $f > dataset/sample/$(basename $f); done
+head -100 dataset/clean/movie_texts.jsonl > dataset/sample/movie_texts.jsonl
+git rm -q --ignore-unmatch dataset/sample/overviews.jsonl dataset/sample/ratings.tsv
+git add dataset/clean dataset/sample
+git commit -m "Cap nhat du lieu sach: du OMDb va Wikipedia, bo file mau cu"
+git add dataset/tong_quan_du_lieu_tv2.txt
+git commit -m "Cap nhat file tong quan du lieu cho nhom"
+git push
+git log --oneline | head -8
+# git push hỏi Password -> dán Personal Access Token của GitHub (không phải mật khẩu GitHub)
+
+
+======================================================================
+ M. TẮT MÁY AN TOÀN
+======================================================================
+# Ctrl + C ở Terminal đang chạy Flume (nếu có)
+mapred --daemon stop historyserver
+stop-hbase.sh
+stop-yarn.sh
+stop-dfs.sh
+jps
+sudo shutdown now
+# (Nên) VMware: chuột phải máy ảo -> Snapshot -> Take Snapshot
+
+
+======================================================================
+ N. LỖI ĐÃ GẶP VÀ CÁCH SỬA (ghi vào mục "Khó khăn" của báo cáo)
+======================================================================
+ 1. Không vào được themoviedb.org      -> nhà mạng chặn DNS -> đổi DNS 1.1.1.1 / 8.8.8.8
+ 2. TMDB báo 401                        -> dán nhầm key OMDb (8 ký tự) -> dùng đúng API Key TMDB 32 ký tự
+ 3. OMDb dừng ở 1.000 phim              -> key miễn phí giới hạn lượt/ngày -> hôm sau chạy tiếp
+ 4. Wikidata lỗi 502                    -> máy chủ quá tải -> thử lại có chờ tăng dần, ghi theo nhóm 50 phim
+ 5. Scrapy ra 0 phim                    -> link Wikipedia dạng đầy đủ https://..., tên phim có dấu ":" -> sửa bộ chọn
+ 6. mongoimport lỗi "Character: N"      -> pandas ghi NaN, JSON không có NaN -> đổi NaN thành null
+ 7. MySQL "Loading local data is disabled" -> SET GLOBAL mất khi khởi động lại -> SET PERSIST local_infile = 1
+ 8. Flume OutOfMemoryError              -> heap mặc định 20 MB + nạp thư viện Hive -> flume-env.sh -Xmx512m, HIVE_HOME=
+ 9. mongosh đứng ở dấu ">"              -> thiếu dấu ' đóng lệnh -> Ctrl + C, dán lại đủ
+10. YARN 8088 không mở được             -> nhóm cấu hình cổng 9004 trong yarn-site.xml
+11. scp không chép đè được file mới    -> ghi file trực tiếp trong máy ảo bằng cat > file <<'EOF'
