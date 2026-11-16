@@ -1,4 +1,4 @@
-===== TONG QUAN DU LIEU PHAN THANH VIEN 2 - cap nhat 2026-11-15 23:10 =====
+===== TONG QUAN DU LIEU PHAN THANH VIEN 2 - cap nhat 2026-11-16 23:24 =====
 
 ########## 1. MYSQL - CSDL moviedb ##########
 +--------------+---------+
@@ -36,7 +36,7 @@
 | metascore       | tinyint      | YES  |     | NULL    |       |
 | rotten_tomatoes | tinyint      | YES  |     | NULL    |       |
 +-----------------+--------------+------+-----+---------+-------+
-=== Bang movies: 3 dong mau ===
+=== Bang movies: dong mau ===
 *************************** 1. row ***************************
        movie_id: 155
         imdb_id: tt0468569
@@ -85,7 +85,7 @@ rotten_tomatoes: 89
 | genre_id   | int         | NO   | PRI | NULL    |       |
 | genre_name | varchar(50) | NO   | UNI | NULL    |       |
 +------------+-------------+------+-----+---------+-------+
-=== Bang genres: 3 dong mau ===
+=== Bang genres: dong mau ===
 +----------+------------+
 | genre_id | genre_name |
 +----------+------------+
@@ -101,7 +101,7 @@ rotten_tomatoes: 89
 | movie_id | int  | NO   | PRI | NULL    |       |
 | genre_id | int  | NO   | PRI | NULL    |       |
 +----------+------+------+-----+---------+-------+
-=== Bang movie_genres: 3 dong mau ===
+=== Bang movie_genres: dong mau ===
 +----------+----------+
 | movie_id | genre_id |
 +----------+----------+
@@ -117,7 +117,7 @@ rotten_tomatoes: 89
 | person_id | int          | NO   | PRI | NULL    |       |
 | name      | varchar(200) | NO   |     | NULL    |       |
 +-----------+--------------+------+-----+---------+-------+
-=== Bang people: 3 dong mau ===
+=== Bang people: dong mau ===
 +-----------+---------------+
 | person_id | name          |
 +-----------+---------------+
@@ -135,7 +135,7 @@ rotten_tomatoes: 89
 | role       | varchar(10) | NO   | PRI | NULL    |       |
 | cast_order | smallint    | YES  |     | NULL    |       |
 +------------+-------------+------+-----+---------+-------+
-=== Bang movie_people: 3 dong mau ===
+=== Bang movie_people: dong mau ===
 +----------+-----------+----------+------------+
 | movie_id | person_id | role     | cast_order |
 +----------+-----------+----------+------------+
@@ -154,7 +154,7 @@ rotten_tomatoes: 89
 | rating     | decimal(3,1) | YES  |     | NULL    |       |
 | created_at | datetime     | YES  |     | NULL    |       |
 +------------+--------------+------+-----+---------+-------+
-=== Bang reviews: 3 dong mau ===
+=== Bang reviews: dong mau ===
 +-----------+----------+--------------+--------+---------------------+
 | review_id | movie_id | author       | rating | created_at          |
 +-----------+----------+--------------+--------+---------------------+
@@ -167,68 +167,80 @@ rotten_tomatoes: 89
 
 === Collection movie_texts: 1500 document. 1 document mau:
 {
-  movie_id: 24428,
-  imdb_id: 'tt0848228',
-  title: 'The Avengers',
-  title_vi: 'Biệt đội siêu anh hùng',
-  overview_tmdb: 'When an unexpected enemy emerges and threatens global safety and security, Nick Fury, director of the international peacekeeping agency known as S.H.I.E.L.D., finds himself in need of a team to pull the world back from the brink of disaster. Spanning the globe, a daring recruitment effort begins!',
+  movie_id: 27205,
+  imdb_id: 'tt1375666',
+  title: 'Inception',
+  title_vi: 'Kẻ trộm giấc mơ',
+  overview_tmdb: `Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: "inception", the implantation of another person's idea into a target's subconscious.`,
   wiki_ngon_ngu: 'vi',
-  wiki_tom_tat: 'Biệt đội siêu anh hùng là một bộ phim siêu anh hùng của Mỹ công chiếu vào năm 2012 được xây dựng dựa trên nguyên mẫu các thành viên của biệt đội siêu anh hùng Avengers của Marvel Comics, do Marvel Studios sản xuất và Walt Disney Studios Motion Pictures phân phối phát hành. Đây là bộ phim thứ 6 kết thúc Giai đoạn 1 trong Vũ trụ Điện ảnh Marvel (MCU). Bộ phim do Joss Whedon viết kịch bản kiêm đạo diễn, với sự tham gia của các diễn viên chính bao gồm Robert Downey, Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth, Scarlett Johansson, Jeremy Renner trong vai các thành viên của đội Avengers, cùng với Tom Hiddleston, Clark Gregg, Cobie Smulders, Stellan Skarsgård và Samuel L. Jackson. Trong The Avengers, Nick Fury, người điều hành của tổ chức gìn giữ hòa bình S.H.I.E.L.D., chiêu mộ Tony Stark, Bruce Banner, Thor, và Steve Rogers để để thành lập một đội có khả năng ngăn chặn em trai của Thor, Loki chinh phục Trái đất.',
-  wiki_url: 'https://vi.wikipedia.org/wiki/Bi%E1%BB%87t_%C4%91%E1%BB%99i_si%C3%AAu_anh_h%C3%B9ng',
-  awards: 'Nominated for 1 Oscar. 43 wins & 81 nominations total',
-  wiki_vi_infobox: {
-    ten_bai: 'Biệt đội siêu anh hùng',
-    dao_dien: 'Joss Whedon',
-    dien_vien: 'Robert Downey Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth, Scarlett Johansson, Jeremy Renner, Tom Hiddleston, Clark Gregg, Cobie Smulders, Stellan Skarsgård, Samuel L. Jackson',
-    phat_hanh: 'Walt Disney Studios Motion Pictures',
-    cong_chieu: '11 tháng 4 năm 2012 ( 2012-04-11 ) ( El Capitan Theatre ) 27 tháng 4 năm 2012 ( 2012-04-27 ) (Việt Nam) 4 tháng 5 năm 2012 ( 2012-05-04 ) (Hoa Kỳ)',
-    thoi_luong: '142 phút',
-    quoc_gia: 'Hoa Kỳ',
-    ngon_ngu: 'Tiếng Anh',
-    kinh_phi: '220 triệu USD',
-    doanh_thu: '1,519 tỷ USD',
-    kinh_phi_usd: 220000000,
-    doanh_thu_usd: 1519000000
-  }
+  wiki_tom_tat: 'Kẻ trộm giấc mơ là một bộ phim điện ảnh Anh – Mỹ thuộc thể loại hành động – khoa học viễn tưởng – giật gân ra mắt vào năm 2010 do Christopher Nolan làm đạo diễn, viết kịch bản và đồng sản xuất. Tác phẩm có sự tham gia diễn xuất của các diễn viên chính gồm Leonardo DiCaprio, Elliot Page, Joseph Gordon-Levitt, Marion Cotillard, Ken Watanabe, Tom Hardy, Cillian Murphy, Tom Berenger, và Michael Caine. DiCaprio vào vai Dom Cobb, một kẻ cắp chuyên nghiệp chuyên thực hiện các hoạt động gián điệp kinh tế bằng cách xâm nhập vào tiềm thức mục tiêu của anh ta. Cobb được đề nghị thực hiện một nhiệm vụ để chuộc lại cuộc đời cho mình, một nhiệm vụ bất khả thi: "ý tưởng khởi nguồn" – thông qua việc cấy ghép ý tưởng của một người vào trong tiềm thức của người khác.',
+  wiki_url: 'https://vi.wikipedia.org/wiki/K%E1%BA%BB_tr%E1%BB%99m_gi%E1%BA%A5c_m%C6%A1',
+  awards: 'Won 4 Oscars. 160 wins & 220 nominations total',
+  wiki_vi_infobox: null
 }
 
 === Collection reviews: 7872 document. 1 document mau:
 {
-  review_id: 2,
+  review_id: 1,
   movie_id: 157336,
-  author: 'decovision',
-  content: "People seem to think that if you enjoy a Christopher Nolan movie, you are a fanboy and the film couldn't really be that good. That is not true. He has never made a bad movie, Insomnia is probably his worst and it is still an excellent movie. \r\n" +
-    "Interstellar is up there in his top 3, with The Dark Knight being number 1 and Inception in number 2. I don't think he will ever make a better movie than The Dark Knight, it is without a doubt a masterpiece of cinema in my opinion. It can be enjoyed on so many levels.\r\n" +
-    'I remember seeing Interstellar in the movie theater and being on the edge of my seat the whole time. It was breathtaking but the end left me confused so i walked out disappointed. \r\n' +
-    'Since then i have watched it many times but it only took a second viewing to realize what a great ending it is and here is why. How many people discuss the end, was the wormhole open or closed for him to make it to Brand, what happens next, is there a sequel. I discuss this with people who hate the movie and the debate will still last a good 30 minutes if not more without getting heated. It is a wonderful story told through the eyes of a genius film maker who deserves more than he receives, an oscar would be nice start.\r\n' +
-    "I read hat his next movie is to be released in July 2017, I can't wait to find out everything about it like i have since he began.\r\n" +
-    "If you're unsure about Christopher Nolan, watch his career from the beginning starting with Doodlebug."
+  author: 'Reno',
+  content: "Well, one off from two of this year's most expected movies alongside 'The Battle of Five Armies'. Like all the Chris Nolan fans, I was equally excited to see the movie on the opening day opening show. But I slightly disappointed that it was not a digital 3D film. I agree, this science-fiction was more dramatized than usual space travel stories does with an adventure-thriller. Almost a 3 hour long stretch movie did not waste much time to take us to the core of the story. Get prepared for this extremely rare voyage into the space with a logical explanation for everything you see on the screen. Well done research for the most matured and intelligent writing. All the credit must go to Nolan brothers. A good sign from Jonathan Nolan, who can make big in the entertainment industry in a future like his brother.\r\n" +
+    '\r\n' +
+    "As we know many had liked 'Inception', to me that was a simple multi-layered action movie, that's all. But the same stuffs that used in this film makes sense. In fact, you have to have a little knowledge over how the universe works, so then it will be easy to catch the scene and situations while watching the movie. Totally like a documentary style concept, but with the additional stuffs like characters and its emotions add flavor that gives a movie look. An educational movie, though it also can work for those who wants just entertainment. Only the slow movie pace would test their patience.\r\n" +
+    '\r\n' +
+    "It all begins like Shyamalan's 'Signs' movie with a family living surrounded by corn field. Then switches to 'The Astronaut Farmer' and going through 'Gravity', finally meets the 'Inception'. It was just a reference to call the movie setting that brings constant change for every half an hour. Like the opening scene and the end scene had over a 100 years difference.\r\n" +
+    '\r\n' +
+    "As I earlier said it was the story of a family alongside the future of humankind and decoding universal mysteries through travelling in space and time. This movie would a reasonable for those who thought '2001: A Space Odyssey' is a boring piece, Cleverly written cinematic piece especially for science geeks. I don't know how perfect the movie to the actual present astrophysics, but will justify for the common people's capacity of understanding with an encourageable amount of commercial elements in it to entertain as well.\r\n" +
+    '\r\n' +
+    'The first three quarters of the movie was well made. It puts me in a unblinkable position like a story was narrated by Brian Cox in a television series. Like I said, lots of astrophysics involved in it, but strangely human emotions were also exhibited equally that I never expected one from Nolan film. It was not an ordinary sentiment, but was strong enough to make a man cry for happy and sad situations in the movie. I liked science and emotion coming together. In fact, it saved the movie, otherwise it would have been a science documentary straight from NASA production through Nolan direction.\r\n' +
+    '\r\n' +
+    "There are many surprise elements in the movie and of course there is a twist at the end. We can call it a series of twists like the layers. Compared to last quarter of the movie to the rest, it completely detaches which opens broadly to the different directions. And that happens so fast rushing towards the other end. Which give an impression of the movie 'Inception'. In a perfect way to say the first 75% was 'The Tree of Life' and the remains are 'Inception'.\r\n" +
+    '\r\n' +
+    "‘‘This world's a treasure,\r\n" +
+    "but it's been telling us to leave for a while now.’’\r\n" +
+    '\r\n' +
+    "All the actors were so good. Matthew McConaughey steals the show as he dominates the majority of the screen space in the story presentation. There's no ruling out the fine performance executions from Anne Hathaway and the young star from the Twilight movie, Mackenzie Foy. The remaining cast was having less scope which were like the guest appearances that was widened a little broader, but was perfectly fitted for the story. Especially Matt Damon's was the crucial one.\r\n" +
+    '\r\n' +
+    "Remember the movie 'Contact', a lovely movie, which was ruined by its fictional ending. Something like that happened in this film as well. The story was initiated with a realistic approach with actual scientific contents as per the present understanding about the universe. But the end was let me down with the layered contents that kind of impossible to agree with it. As a cinematic theme it worked, yeah, a good solution for this wonderfully written story. We know that the time can't run backwards, so that's the trouble.\r\n" +
+    '\r\n' +
+    "Anyway, this movie defines in a new way, I mean scientifically the existence of ghost. It was not a horror movie, but I liked supernatural force that merged with this science fiction theme. That explains and gives vast ideas to expand our physics beyond something and somewhere yet to reach. Hats off to the director, because he was not thinking of making money here. His idea was to implement what the humans are understood so far about the cosmos. And he very nicely transformed those into the silver screen with the blend of human emotions. In my opinion, this will replace '2001: A Space Odyssey' for sometime till another one make this way.\r\n" +
+    '\r\n' +
+    "I could have not asked a better space travel drama than this, especially when I heard Nolan doing a science-fiction I believed he gonna rock it. He was so true to the science and the human feelings in this film. If you had seen enough movies before like this one, you can recall your memories like the Tom Hanks parts from 'Cloud Atlas'. But still independently stands strong and falls in a never seen before category.\r\n" +
+    '\r\n' +
+    "‘‘Maybe we've spent too long\r\n" +
+    'trying to figure all this out with theory.’’\r\n' +
+    '\r\n' +
+    'The end scene leaves a hint of a possible sequel. I would be happy if that happen in a near future, but definitely that would be a completely different cinema as per how this one ended. I know his fans want that to happen and so am I.\r\n' +
+    '\r\n' +
+    "The visuals were not that great, but simply very good. To see those in digital 3D would have given us a different experience, sadly Nolan was not in favor of that technology. Hoping this movie would get as many as the Oscars nod. Especially not getting into the best motion picture shortlist would be a shame. Like I said I'm no one fan, I just love watching everyone's every movie. I would have went to see it again if it was converted into digital 3D, since I'm modern tech geek when it comes to the films.\r\n" +
+    '\r\n' +
+    "It will become a talk of the week, perhaps month all over the world, so don't leave behind when your friends talk about it. What I gonna say is it is a must see asap if you are a movie fanatic like me otherwise Nolan movies does not need anyone's recommendation because his movies usually sell itself like the hot samosa."
 }
 
 ########## 3. HDFS - /user/nhom06/movies ##########
-26.5 K   26.5 K   /user/nhom06/movies/mr/mr1_omdb_sach
+39.6 K   39.6 K   /user/nhom06/movies/mr/mr1_omdb_sach
 188.4 K  188.4 K  /user/nhom06/movies/mr/mr2_tmdb_khong_trung
-49.0 K   49.0 K   /user/nhom06/movies/mr/mr3_the_loai
-1.4 M    1.4 M    /user/nhom06/movies/raw/flume
+72.5 K   72.5 K   /user/nhom06/movies/mr/mr3_the_loai
+2.8 M    2.8 M    /user/nhom06/movies/raw/flume
 22.9 M   22.9 M   /user/nhom06/movies/raw/tmdb
 189      189      /user/nhom06/movies/sqoop/genres
 33.1 K   33.1 K   /user/nhom06/movies/sqoop/movie_genres
 173.2 K  173.2 K  /user/nhom06/movies/sqoop/movie_people
-188.6 K  188.6 K  /user/nhom06/movies/sqoop/movies
+214.2 K  214.2 K  /user/nhom06/movies/sqoop/movies
 77.7 K   77.7 K   /user/nhom06/movies/sqoop/people
 369.4 K  369.4 K  /user/nhom06/movies/sqoop/reviews
--rw-r--r--   1 nhom06 supergroup      13601 2026-11-15 22:37 /user/nhom06/movies/mr/mr1_omdb_sach/part-00000
--rw-r--r--   1 nhom06 supergroup      13520 2026-11-15 22:37 /user/nhom06/movies/mr/mr1_omdb_sach/part-00001
--rw-r--r--   1 nhom06 supergroup     192910 2026-11-15 22:38 /user/nhom06/movies/mr/mr2_tmdb_khong_trung/part-00000
--rw-r--r--   1 nhom06 supergroup      50156 2026-11-15 22:39 /user/nhom06/movies/mr/mr3_the_loai/part-00000
--rw-r--r--   1 nhom06 supergroup    1088613 2026-11-15 22:34 /user/nhom06/movies/raw/flume/2026-11-15/omdb_movies.jsonl.1794756822060
--rw-r--r--   1 nhom06 supergroup     375019 2026-11-15 22:34 /user/nhom06/movies/raw/flume/2026-11-15/wiki_movies.jsonl.1794756822803
--rw-r--r--   1 nhom06 supergroup       8717 2026-11-15 22:36 /user/nhom06/movies/raw/tmdb/danh_sach_tmdb.txt
--rw-r--r--   1 nhom06 supergroup   24033355 2026-11-15 22:36 /user/nhom06/movies/raw/tmdb/tmdb_movies.jsonl
--rw-r--r--   1 nhom06 supergroup        189 2026-11-15 22:27 /user/nhom06/movies/sqoop/genres/part-m-00000
--rw-r--r--   1 nhom06 supergroup      33905 2026-11-15 22:28 /user/nhom06/movies/sqoop/movie_genres/part-m-00000
--rw-r--r--   1 nhom06 supergroup     170477 2026-11-15 22:28 /user/nhom06/movies/sqoop/movie_people/part-m-00000
--rw-r--r--   1 nhom06 supergroup       6928 2026-11-15 22:28 /user/nhom06/movies/sqoop/movie_people/part-m-00001
--rw-r--r--   1 nhom06 supergroup     193164 2026-11-15 22:27 /user/nhom06/movies/sqoop/movies/part-m-00000
--rw-r--r--   1 nhom06 supergroup      79591 2026-11-15 22:28 /user/nhom06/movies/sqoop/people/part-m-00000
--rw-r--r--   1 nhom06 supergroup     378262 2026-11-15 22:28 /user/nhom06/movies/sqoop/reviews/part-m-00000
+-rw-r--r--   1 nhom06 supergroup      20143 2026-11-16 22:57 /user/nhom06/movies/mr/mr1_omdb_sach/part-00000
+-rw-r--r--   1 nhom06 supergroup      20385 2026-11-16 22:57 /user/nhom06/movies/mr/mr1_omdb_sach/part-00001
+-rw-r--r--   1 nhom06 supergroup     192910 2026-11-16 22:58 /user/nhom06/movies/mr/mr2_tmdb_khong_trung/part-00000
+-rw-r--r--   1 nhom06 supergroup      74214 2026-11-16 22:58 /user/nhom06/movies/mr/mr3_the_loai/part-00000
+-rw-r--r--   1 nhom06 supergroup    1620128 2026-11-16 22:56 /user/nhom06/movies/raw/flume/2026-11-16/omdb_movies.jsonl.1794844546968
+-rw-r--r--   1 nhom06 supergroup    1288367 2026-11-16 22:56 /user/nhom06/movies/raw/flume/2026-11-16/wiki_movies.jsonl.1794844547750
+-rw-r--r--   1 nhom06 supergroup       8717 2026-11-16 22:57 /user/nhom06/movies/raw/tmdb/danh_sach_tmdb.txt
+-rw-r--r--   1 nhom06 supergroup   24033355 2026-11-16 22:57 /user/nhom06/movies/raw/tmdb/tmdb_movies.jsonl
+-rw-r--r--   1 nhom06 supergroup        189 2026-11-16 22:53 /user/nhom06/movies/sqoop/genres/part-m-00000
+-rw-r--r--   1 nhom06 supergroup      33905 2026-11-16 22:54 /user/nhom06/movies/sqoop/movie_genres/part-m-00000
+-rw-r--r--   1 nhom06 supergroup     170477 2026-11-16 22:55 /user/nhom06/movies/sqoop/movie_people/part-m-00000
+-rw-r--r--   1 nhom06 supergroup       6928 2026-11-16 22:55 /user/nhom06/movies/sqoop/movie_people/part-m-00001
+-rw-r--r--   1 nhom06 supergroup     219319 2026-11-16 22:53 /user/nhom06/movies/sqoop/movies/part-m-00000
+-rw-r--r--   1 nhom06 supergroup      79591 2026-11-16 22:54 /user/nhom06/movies/sqoop/people/part-m-00000
+-rw-r--r--   1 nhom06 supergroup     378262 2026-11-16 22:54 /user/nhom06/movies/sqoop/reviews/part-m-00000
