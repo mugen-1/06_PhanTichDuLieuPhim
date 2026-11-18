@@ -1,10 +1,10 @@
------ Thông tin đề tài ---------------------
-STT: <STT nhóm>
-Tên đề tài: Thu thập, lưu trữ và phân tích dữ liệu phim ảnh với hệ sinh thái Hadoop
-Lớp học phần: BDES333877_xx
-Năm học: HKx/20xx-20xx
+----- Thông tin đề tài --------------------
+STT: Nhóm 06
+Tên đề tài: Phân tích dữ liệu phim ảnh
+Lớp học phần: BDES33387_26_1_TX
+Năm học: 2026-2027
 --------------------------------------------
 Thông tin nhóm
-1. <Họ tên trưởng nhóm> (<MSSV>) – <SĐT> – <Email cá nhân>
-2. <Họ tên sinh viên 2> (<MSSV>)
-3. <Họ tên sinh viên 3> (<MSSV>)
+1. Nguyễn Đoàn Trung Trực (24TX810019) – 0907140159 – nguyendoantrungtructht@gmail.com
+2. Nguyễn Trung Hiếu (24TX810059)
+3. Lê Ngọc Nhân (25TX810016)

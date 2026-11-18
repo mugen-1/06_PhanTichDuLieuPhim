@@ -1,0 +1,21 @@
+QUY UOC DU LIEU NHOM 06 (ca nhom phai theo dung)
+- File TSV: cot cach nhau bang dau TAB, UTF-8, KHONG co dong tieu de.
+- Trong 1 o khong duoc co dau TAB hay xuong dong (thay bang dau cach).
+- Thieu du lieu: de trong. budget/revenue = 0 nghia la thieu.
+
+1) movies (11 cot) - HDFS: /user/nhom06/movies/raw/movies/
+   movie_id(INT, TMDB id) | imdb_id(tt...) | title | release_date(YYYY-MM-DD)
+   | release_year(INT) | runtime(INT, phut) | genres(ngan bang |, vd Action|Drama)
+   | original_language(en, vi...) | budget(BIGINT) | revenue(BIGINT) | overview
+
+2) imdb_ratings (3 cot) - HDFS: /user/nhom06/movies/raw/imdb/
+   imdb_id | average_rating(DOUBLE) | num_votes(INT)
+
+3) ratings (4 cot, MovieLens, da doi sang movie_id cua TMDB) - HDFS: /user/nhom06/movies/raw/ratings/
+   user_id(INT) | movie_id(INT) | rating(DOUBLE 0.5-5) | ts(epoch giay)
+
+Khoa ghep: imdb_id (TMDB <-> IMDb), movie_id (movies <-> ratings).
+Hive: CSDL phim_db cua trungtruc (truong nhom). Sqoop cua trunghieu nap vao CSDL rieng
+(vd staging_db) hoac vao dung thu muc HDFS o tren, KHONG ghi de bang trong phim_db.
+File lon hon 50 MB: khong day len GitHub, chia se qua Google Drive va ghi link
+vao readme.txt. Ban mau nho: dataset/sample/
