@@ -1,0 +1,3 @@
+flask
+happybase
+pyhive[hive_pure_sasl]
