@@ -11,7 +11,7 @@ get 'movies', '999002', 'info:title'
 # DELETE
 deleteall 'movies', '999002'
 get 'movies', '999002'
-# Doc danh gia cua phim 1001 nho rowkey movieId_userId
-scan 'ratings', {ROWPREFIXFILTER => '1001_', LIMIT => 5}
+# Doc danh gia cua phim 155 nho rowkey movieId_userId
+scan 'ratings', {ROWPREFIXFILTER => '155_', LIMIT => 5}
 scan 'movies', {LIMIT => 3, COLUMNS => ['info:title', 'info:release_year']}
 exit

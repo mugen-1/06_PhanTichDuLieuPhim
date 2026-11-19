@@ -19,3 +19,6 @@ Hive: CSDL phim_db cua trungtruc (truong nhom). Sqoop cua trunghieu nap vao CSDL
 (vd staging_db) hoac vao dung thu muc HDFS o tren, KHONG ghi de bang trong phim_db.
 File lon hon 50 MB: khong day len GitHub, chia se qua Google Drive va ghi link
 vao readme.txt. Ban mau nho: dataset/sample/
+
+DU LIEU THAT: dataset/chuyen_doi/ (tao bang source-code/trungtruc/chuyen_doi_du_lieu.py tu dataset/clean cua trunghieu).
+ratings lay tu reviews TMDB: moi author = 1 user_id, diem thang 10 chia 2.

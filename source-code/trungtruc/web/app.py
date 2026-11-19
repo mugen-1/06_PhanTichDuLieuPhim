@@ -8,8 +8,9 @@ from flask import Flask, request, redirect, url_for, render_template_string, abo
 app = Flask(__name__)
 COLS = ["imdb_id", "title", "release_date", "release_year", "runtime", "genres",
         "language", "budget", "revenue", "overview"]
-GENRES = ["Action", "Adventure", "Animation", "Comedy", "Crime", "Drama",
-          "Horror", "Romance", "Sci-Fi", "Thriller"]
+GENRES = ["Action", "Adventure", "Animation", "Comedy", "Crime", "Drama", "Family",
+          "Fantasy", "History", "Horror", "Music", "Mystery", "Romance",
+          "Science Fiction", "TV Movie", "Thriller", "War", "Western"]
 
 
 def ket_noi():
