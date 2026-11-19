@@ -4,8 +4,8 @@ from pyspark.sql.functions import col, avg, count
 spark = SparkSession.builder.appName("AvgRatingByGenre").getOrCreate()
 
 # THÊM file:// VÀO TRƯỚC ĐƯỜNG DẪN ĐỂ ĐỌC TRÊN Ổ CỨNG MÁY ẢO
-movies_df = spark.read.option("sep", "\t").option("header", "true").csv("file:///home/nhom06/06_PhanTichDuLieuPhim/dataset/sample/movies.tsv")
-genres_df = spark.read.option("sep", "\t").option("header", "true").csv("file:///home/nhom06/06_PhanTichDuLieuPhim/dataset/sample/movie_genres.tsv")
+movies_df = spark.read.option("sep", "\t").option("header", "true").csv("file:///home/nhom06/06_PhanTichDuLieuPhim/dataset/clean/movies.tsv")
+genres_df = spark.read.option("sep", "\t").option("header", "true").csv("file:///home/nhom06/06_PhanTichDuLieuPhim/dataset/clean/movie_genres.tsv")
 
 # Ép kiểu và lọc bỏ dòng lỗi
 movies_clean = movies_df.select(

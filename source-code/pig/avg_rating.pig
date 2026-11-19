@@ -1,4 +1,4 @@
-movies = LOAD 'dataset/sample/movies.tsv' USING PigStorage('\t') AS (
+movies = LOAD 'dataset/clean/movies.tsv' USING PigStorage('\t') AS (
     movie_id:int, imdb_id:chararray, title:chararray, title_vi:chararray, 
     year:int, release_date:chararray, runtime:int, budget:long, revenue:long, 
     box_office_us:long, language:chararray, country:chararray, rated:chararray, 
@@ -9,7 +9,7 @@ movies = LOAD 'dataset/sample/movies.tsv' USING PigStorage('\t') AS (
 -- Lọc bỏ các dòng có chứa N/A hoặc lỗi
 movies_clean = FILTER movies BY tmdb_vote_avg IS NOT NULL;
 
-genres = LOAD 'dataset/sample/movie_genres.tsv' USING PigStorage('\t') AS (m_id:int, genre_id:int);
+genres = LOAD 'dataset/clean/movie_genres.tsv' USING PigStorage('\t') AS (m_id:int, genre_id:int);
 
 -- JOIN và tính trung bình
 joined = JOIN movies_clean BY movie_id, genres BY m_id;

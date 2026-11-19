@@ -1,4 +1,4 @@
-movies = LOAD 'dataset/sample/movies.tsv' USING PigStorage('\t') AS (
+movies = LOAD 'dataset/clean/movies.tsv' USING PigStorage('\t') AS (
     movie_id:int, imdb_id:chararray, title:chararray, title_vi:chararray, 
     year:int, release_date:chararray, runtime:int, budget:long, revenue:long, 
     box_office_us:long, language:chararray, country:chararray, rated:chararray, 

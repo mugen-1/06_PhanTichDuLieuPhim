@@ -24,8 +24,8 @@ public class TopNMovies {
             // Bỏ qua dòng tiêu đề (vì nó có chữ "movie_id" hoặc cột không phải số)
             if (fields.length >= 16 && !line.contains("movie_id")) {
                 try {
-                    double rating = Double.parseDouble(fields[14].trim()); // Cột 15
-                    double votes = Double.parseDouble(fields[15].trim());  // Cột 16
+                    double rating = Double.parseDouble(fields[15].trim()); // Cột 15
+                    double votes = Double.parseDouble(fields[14].trim());  // Cột 16
                     String title = fields[2].trim(); // Cột 3
 
                     if (votes >= MIN_VOTES) {

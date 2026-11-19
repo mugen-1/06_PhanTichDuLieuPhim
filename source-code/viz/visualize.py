@@ -5,18 +5,21 @@ import os
 
 os.makedirs("reports/figures", exist_ok=True)
 
-movies = pd.read_csv("dataset/sample/movies.tsv", sep="\t")
-genres = pd.read_csv("dataset/sample/movie_genres.tsv", sep="\t")
+movies = pd.read_csv("dataset/clean/movies.tsv", sep="\t")
+genres = pd.read_csv("dataset/clean/movie_genres.tsv", sep="\t")
 
 movies = movies.rename(columns={'movie_id': 'id', 'tmdb_vote_avg': 'rating', 'tmdb_vote_count': 'votes'})
 genres = genres.rename(columns={'movie_id': 'id', 'genre_id': 'genre'})
+# Doi genre_id sang ten the loai
+ten_tl = pd.read_csv("dataset/clean/genres.tsv", sep="\t")
+genres['genre'] = genres['genre'].map(dict(zip(ten_tl.genre_id, ten_tl.genre_name)))
 
 # 1. Bar: Số phim theo thể loại
 plt.figure(figsize=(10, 6))
 genre_counts = genres['genre'].value_counts().head(10)
 sns.barplot(x=genre_counts.index, y=genre_counts.values, palette="viridis")
 plt.title("Số lượng phim theo thể loại (Top 10)")
-plt.xlabel("Genre ID")
+plt.xlabel("Thể loại"); plt.xticks(rotation=45, ha="right"); plt.tight_layout()
 plt.ylabel("Số lượng phim")
 plt.savefig("reports/figures/1_bar_genre.png")
 plt.close()
@@ -56,7 +59,7 @@ plt.figure(figsize=(12, 8))
 sns.heatmap(pivot, cmap="YlGnBu", annot=False)
 plt.title("Phân bố thể loại theo thập niên")
 plt.xlabel("Thập niên")
-plt.ylabel("Genre ID")
+plt.ylabel("Thể loại")
 plt.savefig("reports/figures/5_heatmap_genre_decade.png")
 plt.close()
 
