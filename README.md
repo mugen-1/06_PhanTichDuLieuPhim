@@ -1,20 +1,18 @@
-# Đồ án Nhập môn Dữ liệu lớn (BDES333877) – Đề tài phim ảnh
+# Đồ án Nhập môn Dữ liệu lớn (BDES333877) – Nhóm 06 – Phân tích dữ liệu phim ảnh
 
 ## Cấu trúc thư mục
-| Thư mục | Nội dung |
-|---|---|
-| `source-code/crawler` | Crawler TMDB API, script tải IMDb/MovieLens, làm sạch dữ liệu (Thành viên 2) |
-| `source-code/mapreduce` | Các chương trình MapReduce (cả nhóm) |
-| `source-code/hive` | Script HQL tạo bảng, truy vấn, CRUD (Trưởng nhóm) |
-| `source-code/hbase` | Script/code HBase (Trưởng nhóm) |
-| `source-code/pig` | Script Pig (Thành viên 3) |
-| `source-code/spark` | Code Spark (Thành viên 3) |
-| `source-code/gui` | Web GUI (Trưởng nhóm) |
-| `source-code/backup` | Script sao lưu/phục hồi |
-| `dataset/` | Dữ liệu dùng trong chương trình (file lớn hơn 100MB không commit, xem `dataset/README.md`) |
-| `reports/` | Báo cáo (.docx, .pdf), slides, bảng tự chấm, bảng phân công, video |
-| `refs/` | Tài liệu tham khảo |
-| `libs/` | Danh sách phần mềm, thư viện, phiên bản (`versions.txt`) |
+| Thư mục | Nội dung | Người làm |
+|---|---|---|
+| `source-code/crawler` | Thu thập TMDB, OMDb, Wikipedia, Scrapy; làm sạch; MySQL; Flume; sổ tay lệnh | trunghieu |
+| `source-code/mapreduce/tv2_*` | 3 MapReduce: lọc lỗi OMDb, loại trùng imdb_id, chuẩn hóa thể loại | trunghieu |
+| `source-code/pig`, `spark`, `viz` | Pig, Spark, trực quan hóa | ngocnhan |
+| `source-code/tv3` | 3 MapReduce: đếm phim theo thể loại, top-N, điểm TB theo thể loại | ngocnhan |
+| `source-code/trungtruc` | Hive, HBase, CRUD, 2 MapReduce, sao lưu/phục hồi, web, Kafka, chuyển đổi dữ liệu | trungtruc |
+| `dataset/clean` | Dữ liệu sạch 1.500 phim (3 nguồn) | trunghieu |
+| `dataset/chuyen_doi` | Dữ liệu theo `dataset/SCHEMA.txt` cho Hive/HBase/web | trungtruc |
+| `dataset/sample` | Mẫu nhỏ để thử | cả nhóm |
+| `reports/` | Báo cáo, slides, bảng tự chấm, bảng phân công, ảnh chụp, biểu đồ | cả nhóm |
+| `refs/`, `libs/` | Tài liệu tham khảo, phiên bản phần mềm (`libs/versions.txt`) | cả nhóm |
 
 ## Quy tắc làm việc
 1. Mỗi người commit bằng **tài khoản GitHub của chính mình**.

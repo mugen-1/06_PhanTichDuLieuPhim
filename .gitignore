@@ -32,3 +32,6 @@ dataset/raw/
 Thumbs.db
 .idea/
 .vscode/
+
+# Ket qua chay Pig/Spark (khong dua len git)
+output_*/
