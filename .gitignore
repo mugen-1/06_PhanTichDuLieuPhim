@@ -35,3 +35,6 @@ Thumbs.db
 
 # Ket qua chay Pig/Spark (khong dua len git)
 output_*/
+
+# File Java do Sqoop tự sinh khi import
+/*.java

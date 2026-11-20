@@ -1,12 +1,34 @@
-# Bộ phiên bản chuẩn của nhóm – mọi người cài đúng các phiên bản này
-Ubuntu        24.04 LTS
-Java          17
-Hadoop        3.4.2
-Hive          4.1.0
-HBase         2.6.6
-Pig           0.18.0
-Sqoop         1.4.7
-Spark         3.5.9 (bin-hadoop3)
-MySQL         8.0
-MongoDB       8.0
-Python        3.12
+# Danh sách phần mềm, thư viện – Nhóm 06 – Phân tích dữ liệu phim ảnh
+
+## 1. Môi trường chính (máy ảo VMware)
+Hệ điều hành   Ubuntu 24.04.4 LTS
+Java           17.0.21.1
+Python         3.12.3
+
+## 2. Hệ sinh thái Hadoop
+Hadoop         3.4.2 (HDFS, YARN, MapReduce, Streaming)
+Hive           4.1.0 (HiveServer2 + Beeline)
+HBase          2.6.6 (ZooKeeper đi kèm, Thrift server)
+Pig            0.18.0
+Spark          3.5.9 (bin-hadoop3, PySpark đi kèm)
+Sqoop          1.4.7 (+ mysql-connector-j)
+Flume          1.11.0
+Kafka          3.9.1 (chế độ KRaft)
+
+## 3. Cơ sở dữ liệu
+MySQL          8.0.46
+MongoDB        8.0.38
+MongoDB Database Tools (mongoimport, mongodump, mongorestore)
+
+## 4. Thư viện Python
+flask          3.1.3      (web giao diện)
+happybase      1.3.0      (kết nối HBase qua Thrift)
+thriftpy2      0.7.1      (đi kèm happybase)
+pandas         3.1.1      (xử lý dữ liệu, biểu đồ)
+matplotlib     3.11.2     (vẽ biểu đồ)
+seaborn        0.13.2     (vẽ biểu đồ)
+numpy          2.5.5      (tính toán)
+
+## 5. Môi trường Windows (triển khai môi trường khác)
+Windows 10/11 + WSL2 (Ubuntu)
+Java 8, Hadoop 3.3.6 (pseudo-distributed)
